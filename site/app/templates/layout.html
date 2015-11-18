@@ -1,51 +1,21 @@
 <!doctype html>
 <html lang="en">
     <head>
-	{% if page %}
-	<title>{{ page }} | Reddit-Imgur Poster</title>
+    {% include 'layout_headers.html' %}
+	
+    {% if page %}
+	    <title>{{ page.title() }} | Reddit-Imgur Poster</title>
 	{% else %}
         <title>Reddit-Imgur Poster</title>
-	{% endif %}
-	    <!-- CSS and JS files -->        
-	    <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-        <!-- Jquery 2.1.4 from google -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-        <!-- Default template stylesheet -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}" >
-	{% if page %}
+	{% endif %}	
+    {% if page %}
 	<!-- Include a specific page's stylesheets if applicable -->
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/' + page + '.css') }}" >
     <script type="text/javascript" src="{{ url_for('static', filename='js/' + page + '.js') }}"></script>
-    {% endif %}
+    {% endif %} 
     </head>
     <body>
-	<!-- Fixed Navbar, copied from https://www.bootstrapzero.com/bootstrap-template/fixed-navbar -->
-	<div class="navbar navbar-inverse navbar-fixed-top">
- 		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-				</button>
-			<a class="navbar-brand" href="/">Reddit Img Poster</a>
-    		</div>
-	<div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <!--li class="active"><a href="/login">Login</a></li-->
-        {% if 'user' in session %}
-        <li><a href="/logout">Logout, {{session['user']}}</a></li>
-        {% else %}
-        <li><a href="/login">Login</a></li>
-        {% endif %}
-        <li><a href="/about">About</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div>
-	</div>
+        {% include 'navbar.html' %}
         {% block content %}{% endblock %}
     </body>
 </html>
