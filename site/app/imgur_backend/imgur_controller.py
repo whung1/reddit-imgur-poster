@@ -26,17 +26,28 @@ def get_client_id():
 def get_client_secret():
     return get_credentials('client_secret')
 
-def user_auth(cur_user):
+def get_request_pin_url():
+    # Generate the url for pin request
+    client_id = get_client_id()
+    req_resp = "pin"
+    state = "anything"
+    url = 'https://api.imgur.com/oauth2/authorize?client_id={cid}&response_type={resp}&state={app_state}'
+    url = url.format(cid=client_id, resp= req_resp, app_state = state)
+    return url
+
+def exchange_pin_for_tokens(user_pin):
     # Get necessary information about this application
     client_id = get_client_id()
     client_secret = get_client_secret()
 
-    # Request Imgur account pin from user
-    user_pin = imgur_viewer.request_pin(client_id)
     # Try to exchange pin for tokens
-    user_tokens = imgur_handlers.get_user_token(client_id,
+    return imgur_handlers.get_user_tokens(client_id,
             client_secret, user_pin)
-    
+ 
+
+def user_auth(user_pin, cur_user):
+    user_tokens = exchange_pin_for_tokens(user_pin)
+
     if(user_tokens is not None):
         # TODO: Update cur_user
         
@@ -65,7 +76,9 @@ if(__name__ == "__main__"):
     
     # Log in user
     print("Testing Login...")
-    user_auth(cur_user)
+    # Request Imgur account pin from user
+    user_pin = imgur_viewer.request_pin(get_client_id())
+    user_auth(user_pin, cur_user)
 
     # Test image upload with or without log in
     print("Testing image upload again...")

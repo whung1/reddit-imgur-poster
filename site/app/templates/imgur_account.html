@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if current_user.imgur_user %}
+<div class="container">
+	<div class="text-center">
+        <h1>Imgur Account Linking</h1>
+        <p class="lead">Currently linked to the following imgur account:<br /><a href="http://imgur.com/user/{{current_user.imgur_user.username}}">{{ current_user.imgur_user.username }}</a></p>
+        <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-area">  
+            <form role="form" id="imgur_unlink_form" action="/account/imgur/unlink" method='post' >
+            <input type="submit" id="submit" name="submit" class="btn btn-danger" value="Disconnect Imgur Account">
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+	<div class="text-center">
+        <h1>Imgur Account Linking</h1>
+        <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-area">  
+            <form role="form" id="imgur_link_form" action="/account/imgur/link" method='post' >
+            <br style="clear:both">
+                    <h3 style="margin-bottom: 25px; text-align: center;">Pin Code:</h3>
+    				<div class="form-group">
+						<input type="text" class="form-control" id="ask" name="user_pin" placeholder="Given Imgur Pincode">
+					</div>
+					<span class="help-block"><p id="characterLeft" class="help-block ">Click <a href={{ request_url }}>here</a> and input given pin into form</p></span>                           </div> 
+                    <input type="submit" id="submit" name="submit" class="btn btn-primary" value="Submit Form" >
+        </form>
+    </div>
+    </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

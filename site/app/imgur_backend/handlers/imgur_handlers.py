@@ -13,7 +13,7 @@ import json_handlers as j_handlers
 def login(username, pwd):
     print('Username: ' + username + ', password: '  + pwd)
     
-def get_user_token(client_id, client_secret, pin):
+def get_user_tokens(client_id, client_secret, pin):
     ''' Given the client_id, client_secret, and pin from the user, exchange it for
     the user's access and refresh tokens in a tuple where
 

@@ -1,4 +1,5 @@
 from app import db
+import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -7,9 +8,9 @@ class User(db.Model):
     email = db.Column(db.String(120))
     authenticated = db.Column(db.Boolean, default=False)
     #TODO: true 1-to-1 relationship with imgur user
-    imgur_user = db.relationship('Imgur_User', backref='user')
+    imgur_user = db.relationship('Imgur_User', uselist=False, backref='user')
     #TODO: true 1-to-1 relationship with reddit user
-    reddit_user = db.relationship('Reddit_User', backref='user')
+    reddit_user = db.relationship('Reddit_User', uselist=False, backref='user')
 
     def is_active(self):
         """All users are active by default"""
@@ -34,10 +35,13 @@ class User(db.Model):
 
 class Imgur_User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64))
     # 255 varchar size for tokens
     access_token = db.Column(db.String(255)) 
     refresh_token = db.Column(db.String(255))
-    last_refresh = db.Column(db.DateTime)
+    last_refresh = db.Column(db.DateTime, 
+            default = datetime.datetime.now,
+            onupdate = datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def __repr__(self):
@@ -45,10 +49,13 @@ class Imgur_User(db.Model):
 
 class Reddit_User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64))
     # 255 varchar size for tokens
     access_token = db.Column(db.String(255)) 
     refresh_token = db.Column(db.String(255))
-    last_refresh = db.Column(db.DateTime)
+    last_refresh = db.Column(db.DateTime, 
+            default = datetime.datetime.now,
+            onupdate = datetime.datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def __repr__(self):

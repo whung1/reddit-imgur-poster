@@ -14,19 +14,18 @@ def parse_user_token_json(j):
     response to user depending on JSON response to access token from
     user given pin
 
-    Returns tuple with the access_token and refresh_token respectively
-        or None if authorization was not successful
+    Returns dict indicating success and
+    with the access_token and refresh_token respectively
+    or error if authorization was not successful
     """
     if('access_token' in j and 'refresh_token' in j):
-        # Get access and refresh tokens 
-        access_token= j['access_token']
-        refresh_token= j['refresh_token']
-        username = j['account_username']
-
-        #return a pair with access and refresh tokens
-        return (access_token, refresh_token, username)
+        return {'success': True,
+                'access_token': j['access_token'], 
+                'refresh_token': j['refresh_token'],
+                'username': j['account_username']}
     else:
-        return throw_error(j)
+        return {'success': False,
+                'error': throw_error(j)}
 
 def parse_upload_image_json(j):
     """ Helper function for upload_image

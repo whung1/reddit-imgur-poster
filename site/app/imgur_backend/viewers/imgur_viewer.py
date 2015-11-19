@@ -4,14 +4,6 @@
 TODO: Change to web based
 """
 
-def display_help():
-    print("""
-    /login          Log onto your account for future actions
-    /upload         Upload image onto Imgur
-    /h /help        Displays this help menu
-    /quit /exit     Exit the console
-    """)
-
 def request_pin(client_id):
     print("Please click the following link to validate your imgur account:")
     # Generate the correct url for pin request
