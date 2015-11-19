@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if current_user.reddit_user %}
+<div class="container">
+	<div class="text-center">
+        <h1>Reddit Account Linking</h1>
+        <p class="lead">Currently linked to the following reddit account:<br /><a href="http://reddit.com/u/{{current_user.reddit_user.username}}">{{ current_user.reddit_user.username }}</a></p>
+        <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-area">  
+            <form role="form" id="imgur_unlink_form" action="/account/reddit/unlink" method='post' >
+            <input type="submit" id="submit" name="submit" class="btn btn-danger" value="Disconnect Reddit Account">
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+	<div class="text-center">
+        <h1>Reddit Account Linking</h1>
+        <p class="lead">Click <a href={{ request_url }} >here</a> and hit allow<br/> to connect reddit account</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

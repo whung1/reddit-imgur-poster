@@ -2,8 +2,8 @@
 <html lang="en">
     <head>
     {% include 'layout_headers.html' %}
-    {% if page %}
-	    <title>{{ page.title() }} | Reddit-Imgur Poster</title>
+    {% if in_title %}
+	    <title>Reddit-Imgur Poster | {{ in_title }}</title>
 	{% else %}
         <title>Reddit-Imgur Poster</title>
 	{% endif %}	
