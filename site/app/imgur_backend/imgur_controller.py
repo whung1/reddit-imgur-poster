@@ -5,7 +5,7 @@ import os
 
 # Self imports
 import handlers.imgur_handlers as imgur_handlers
-from models.user import User as Imgur_User
+import models.user as imgur_user_handlers
 import viewers.imgur_viewer as imgur_viewer
 
 def get_credentials(elem):
@@ -43,7 +43,6 @@ def exchange_pin_for_tokens(user_pin):
     # Try to exchange pin for tokens
     return imgur_handlers.get_user_tokens(client_id,
             client_secret, user_pin)
- 
 
 def user_auth(user_pin, cur_user):
     user_tokens = exchange_pin_for_tokens(user_pin)
@@ -57,12 +56,12 @@ def user_auth(user_pin, cur_user):
 
     return False # Authorization failed, return false
 
-def basic_img_upload(img_url):
-    cur_user = Imgur_User(get_client_id())
+def image_upload(imgur_user, img_url):
+    cur_header = get_header(imgur_user)
+    return imgur_handlers.upload_image(cur_header, img_url)
 
-    print("Non-user image upload...")
-    return imgur_handlers.upload_image(cur_user.get_header(), img_url)
-
+def get_header(imgur_user):
+    return imgur_user_handlers.get_header(imgur_user, get_client_id())
 
 # If you want to run as main, so be it! Here are some tests
 if(__name__ == "__main__"):

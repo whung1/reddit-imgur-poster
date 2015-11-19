@@ -7,6 +7,7 @@ import datetime
 import app.imgur_backend.imgur_controller as im_control
 
 
+
 login_manager.login_view = "login"
 
 @login_manager.user_loader
@@ -22,29 +23,26 @@ def login():
     ''' For GET Requests, display login form
     For POSTs, login user by processing form
     '''
+    # If user is logged in, redirect to home immediately
+    if(current_user):
+        return redirect(url_for('home'))
+    # Otherwise, handle GET and POST normally
     if (request.method == 'GET'):
-        # If user is logged in, redirect to home, else show login form
-        if('user' in session):
-            return redirect(url_for('home'))
         return render_template('login.html', page='login')
     elif (request.method == 'POST'):
-        # TODO: Implement User login
         print(request.form)
         user = User.query.filter_by(username=request.form['username']).first()
         if(user is None):
-            # TODO: Display message that login failed
-            print(User.query.all())
             flash("Username and password combination not found", 'error')
             return render_template('login.html', page='login')
         elif(bcrypt.check_password_hash(user.pwd, request.form['password'])):
-            print(user)
             user.authenticated = True
             db.session.add(user)
             db.session.commit()
+            remember_login=False
             if('remember' in request.form):
-                login_user(user, remember=True)
-            else:
-                login_user(user)
+                remember_login=True
+            login_user(user, remember=remember_login)
             return redirect(url_for('home'))
 
 @app.route('/register/process', methods=['POST'])
@@ -98,7 +96,6 @@ def account():
 @app.route('/account/imgur')
 @login_required
 def imgur_account():
-    # TODO: Page to either link or unlink imgur account
     return render_template("imgur_account.html", request_url=im_control.get_request_pin_url())
     
 @app.route('/account/imgur/link', methods=['POST'])
@@ -152,7 +149,7 @@ def upload_and_post():
     if(request.method == 'POST'):
         # TODO: Sanitize inputs
         # TODO: Reddit Posting Portion
-        response = im_control.basic_img_upload(request.form['img_url'])
+        response = im_control.image_upload(current_user.imgur_user, request.form['img_url'])
         if('success' in response):
             if (response['success'] == True):
                 flash(response['imgur_url'], 'success')
