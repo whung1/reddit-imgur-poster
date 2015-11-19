@@ -33,15 +33,19 @@ def parse_upload_image_json(j):
     to parse the JSON response and give the proper
     output
 
-    Returns str of image link
+    Returns dict detailing success and 
+    uploaded imgur_url or error
     """
     success = j['success']
     if(success == True):
         # Return image link
         # TODO: check if needed to return any specific descriptors
-        return j['data']['link']
+
+        return {'success': True,
+                'imgur_url': j['data']['link'][:-4]}
     else:
-        return throw_error(j)
+        return {'success': False,
+                'error': throw_error(j)}
 
 
 # Error Handling Functions
@@ -50,9 +54,7 @@ def throw_error(j):
     j_error = ""
     if('data' in j and 'error' in j['data']):
         j_error = j['data']['error']
-    print(status + ": " + j_error)
-    #pprint.pprint(j)
-    return None
+    return str(status + " - " + j_error)
 
 def get_status_code(j):
     if('success' not in j):

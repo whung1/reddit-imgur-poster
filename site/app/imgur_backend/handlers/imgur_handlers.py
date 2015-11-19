@@ -49,12 +49,4 @@ def upload_image(header, image_url):
     r = requests.post(upload_url, data=payload, headers = header)
 
     j = r.json()
-    new_img_url = j_handlers.parse_upload_image_json(j)
-    if(new_img_url is None):
-        return {'success': False,
-                'imgur_link': None}
-    elif(new_img_url is not None):
-        print("Image Link: " + new_img_url) #With file extension
-        print("Imgur Link: " + new_img_url[:-4]) #Without file extension
-        return {'success': True,
-                'imgur_link': new_img_url[:-4]}
+    return j_handlers.parse_upload_image_json(j)

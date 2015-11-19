@@ -1,6 +1,6 @@
 from app import app, db, login_manager, bcrypt
 from app.models import User
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, flash
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
 import app.imgur_backend.imgur_controller as im_control
 
@@ -31,9 +31,9 @@ def login():
         if(user is None):
             # TODO: Display message that login failed
             print(User.query.all())
-            print("fail")
+            flash("Username and password combination not found")
             return render_template('login.html', page='login')
-        elif(bcrypt.check_password_hash(user.password, request.form['password'])):
+        elif(bcrypt.check_password_hash(user.pwd, request.form['password'])):
             print(user)
             user.authenticated = True
             db.session.add(user)
@@ -53,14 +53,15 @@ def register_process():
         if(request.form['confirm-password'] == request.form['password']):
             hashed = bcrypt.generate_password_hash(request.form['password'])
             user = User(username=request.form['username'], pwd=hashed, email=request.form['email'])
-            # Automatically log-in and redirect
+            # Register user, log-in, and redirect
             user.authenticated = True
             db.session.add(user)
             db.session.commit()
             login_user(user)
             return redirect(url_for('home'))
         else:
-            return 'Confirmed password was not the same as password'
+            flash("Passwords did not match")
+            return redirect(url_for('login'))
 
 @app.route('/logout')
 @login_required
@@ -104,13 +105,13 @@ def upload_and_post():
         # TODO: Reddit Posting Portion
         response = im_control.basic_img_upload(request.form['img_url'])
         if('success' in response):
-            if(response['success'] == True):
-                return redirect(response['imgur_link'])
-            else: # Image did not upload
-                # TODO: Meaningful error message
-                return 'Image upload failed'
+            if (response['success'] == True):
+                flash(response['imgur_url'], 'success')
+            elif (response['success'] == False):
+                flash(response['error'], 'error')
         else: # Internal error in imgur_backend handling
             return 'Unhandled server error'
+        return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
