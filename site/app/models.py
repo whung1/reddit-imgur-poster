@@ -35,8 +35,8 @@ class Imgur_User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64))
     # 255 varchar size for tokens
-    access_token = db.Column(db.String(255)) 
-    refresh_token = db.Column(db.String(255))
+    access_token = db.Column(db.String(255, convert_unicode=True))
+    refresh_token = db.Column(db.String(255, convert_unicode=True))
     last_refresh = db.Column(db.DateTime, 
             default = datetime.datetime.now,
             onupdate = datetime.datetime.now)
@@ -49,8 +49,8 @@ class Reddit_User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64))
     # 255 varchar size for tokens
-    access_token = db.Column(db.String(255)) 
-    refresh_token = db.Column(db.String(255))
+    access_token = db.Column(db.String(255, convert_unicode=True)) 
+    refresh_token = db.Column(db.String(255, convert_unicode=True))
     #last_refresh = db.Column(db.DateTime, 
     #        default = datetime.datetime.now,
     #        onupdate = datetime.datetime.now)

@@ -57,12 +57,12 @@ def get_status_code(j):
     status = int(j['status'])
     codes = {
         200: "[SUCCESS]",
-        400: "[ERROR] Incorrect or missing parameters", # Image upload fail, etc
-        401: "[ERROR] Requires or missing proper user authorization", # Either need OAuth credentials or they expired
-        403: "[ERROR] Forbidden, incorrect/invalid access", # Check API credits, OAuth headers, and validity of tokens/secrets
-        404: "[ERROR] Requested resource does not exist",
-        429: "[ERROR] Hit rate limit on application or user",
-        500: "[ERROR] Internal Error"
+        400: "[IMGUR ERROR] Incorrect or missing parameters", # Image upload fail, etc
+        401: "[IMGUR ERROR] Requires or missing proper user authorization", # Either need OAuth credentials or they expired
+        403: "[IMGUR ERROR] Forbidden, incorrect/invalid access", # Check API credits, OAuth headers, and validity of tokens/secrets
+        404: "[IMGUR ERROR] Requested resource does not exist",
+        429: "[IMGUR ERROR] Hit rate limit on application or user",
+        500: "[IMGUR ERROR] Internal Error"
     }
 
     return codes.get(status, "[UNHANDLED ERROR]")

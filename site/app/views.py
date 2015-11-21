@@ -2,7 +2,6 @@ from app import app, db, login_manager, bcrypt, reddit
 from app.models import User, Imgur_User, Reddit_User
 from flask import render_template, request, redirect, url_for, session, flash
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
-import datetime
 
 import app.imgur_backend.imgur_controller as im_control
 import app.reddit_backend.reddit_helper as r_h
@@ -128,6 +127,7 @@ def account_imgur_link():
         if('success' in response):
             if (response['success'] == True):
                 # Create new imgur_user
+                print(response)
                 im_usr = Imgur_User(username=response['username'],
                         access_token=response['access_token'],
                         refresh_token=response['refresh_token'],
@@ -211,7 +211,8 @@ def account_reddit_unlink():
 def upload_and_post():
     if(request.method == 'POST'):
         # TODO: Sanitize inputs
-        response = im_control.image_upload(current_user.imgur_user, request.form['img_url'])
+        response = im_control.image_upload(db, 
+                request.form['img_url'], current_user.imgur_user)
         if('success' in response):
             if (response['success'] == True):
                 # Image Uploaded

@@ -4,7 +4,7 @@
 Holds the access and refresh tokens (if applicable) of a User
 and to return authorization headers for user-specific actions"""
 
-import datetime
+from datetime import datetime, timedelta
 
 def access_token_expired(imgur_user, t_limit=3000):
     """Check date access_token was last refreshed
@@ -13,8 +13,7 @@ def access_token_expired(imgur_user, t_limit=3000):
 
     NOTE: Time limit is to be considered expired
     is set to 3000 seconds (50 minutes) by default"""
-
-    time_diff = datetime.datetime.now() - imgur_user.last_refresh()
+    time_diff = datetime.now() - imgur_user.last_refresh
     if(time_diff.total_seconds() > t_limit):
         return True # Expired
     else:
@@ -23,14 +22,29 @@ def access_token_expired(imgur_user, t_limit=3000):
 def get_access_token(imgur_user):
     return imgur_user.access_token
 
+def set_access_token(imgur_user, new_access_token):
+    imgur_user.access_token = new_access_token
+
 def get_refresh_token(imgur_user):
     return imgur_user.refresh_token
+
+def set_refresh_token(imgur_user, new_refresh_token):
+    imgur_user.refresh_token = new_refresh_token
 
 def get_last_refresh_time(imgur_user):
     return imgur_user.last_refresh
 
+def set_last_refresh_time(imgur_user, new_datetime=None):
+    if (new_datetime is None):
+        new_datetime = datetime.datetime.now()
+
+    imgur_user.last_refresh = new_datetime
+
 def get_username(imgur_user):
     return imgur_user.username
+
+def set_username(imgur_user, new_username):
+    imgur_user.username = new_username
 
 def get_header(imgur_user, client_id):
     """ Function to get the header for API actions
@@ -47,4 +61,4 @@ def get_header(imgur_user, client_id):
         # User has been authorized
         # Return header specific to this user via their access token
         return {"Authorization": "Bearer {0}".format(
-                    imgur_user.access_token)}
+                    get_access_token(imgur_user))}

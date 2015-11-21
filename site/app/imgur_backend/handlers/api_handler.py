@@ -13,7 +13,7 @@ def get_user_tokens_via_refresh(client_id,
     params = {'client_id': client_id,
             'client_secret': client_secret,
             'refresh_token': refresh_token,
-            'grant_type': refresh_token}
+            'grant_type': 'refresh_token'}
     url = "https://api.imgur.com/oauth2/token"
 
     # POST to server using requests
