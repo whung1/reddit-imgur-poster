@@ -51,6 +51,7 @@ def upload_image(header, image_url):
     returns dict of {success: True or False, 
                     'imgur_url': str (if success)
                     'error': str (if failure)}"""
+    # TODO: Captcha Handling
     # Set up necessary elements to send to API
     upload_url = "https://api.imgur.com/3/upload"
     payload = {"image": image_url,

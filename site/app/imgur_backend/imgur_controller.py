@@ -92,13 +92,23 @@ def image_upload(db, img_url, imgur_user=None):
     auth_header = get_header(db, imgur_user)
     return api_handler.upload_image(auth_header, img_url)
 
-def get_header(db, imgur_user):
-    """Helper method to grab the correct 
-    authorization headers for user-specific api calls"""
-    refresh_access_token(db, imgur_user)
-    return user_handler.get_header(imgur_user, get_client_id())
+def get_header(db, imgur_user=None):
+    """ Function to get the header for API actions
+    Changes depending whether or not the user
+    has a valid token with the application
 
-
+    Returns an authorization header (single-entry dictionary)"""
+    if(imgur_user is None):
+        # User does not have necessary tokens for authorization
+        # Return the general header for this application
+        return {"Authorization": "Client-ID {0}".format(
+                    get_client_id())}
+    else:
+        # User has been authorized, check if they need refresh
+        refresh_access_token(db, imgur_user)
+        # Return header specific to this user via their access token
+        return {"Authorization": "Bearer {0}".format(
+                    user_handler.get_access_token(imgur_user))}
 
 
 

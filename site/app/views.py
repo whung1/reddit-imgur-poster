@@ -2,6 +2,7 @@ from app import app, db, login_manager, bcrypt, reddit
 from app.models import User, Imgur_User, Reddit_User
 from flask import render_template, request, redirect, url_for, session, flash
 from flask.ext.login import LoginManager, login_required, login_user, logout_user, current_user
+from sqlalchemy.exc import IntegrityError
 
 import app.imgur_backend.imgur_controller as im_control
 import app.reddit_backend.reddit_helper as r_h
@@ -43,7 +44,7 @@ def login():
                 remember_login=True
             login_user(user, remember=remember_login)
             # Re-establish OAuth for reddit object if it exists
-            reddit_oauth = r_h.reestablish_oauth(reddit,
+            reddit_oauth = r_h.establish_oauth(reddit,
                             current_user.reddit_user)
             return redirect(url_for('home'))
 
@@ -55,13 +56,17 @@ def register_process():
         # TODO: Error handling if unique != true for username
         if(request.form['confirm-password'] == request.form['password']):
             hashed = bcrypt.generate_password_hash(request.form['password'])
-            user = User(username=request.form['username'], pwd=hashed, email=request.form['email'])
-            # Register, log-in, and redirect user
-            user.authenticated = True
-            db.session.add(user)
-            db.session.commit()
-            login_user(user)
-            return redirect(url_for('home'))
+            try:
+                user = User(username=request.form['username'], pwd=hashed, email=request.form['email'])
+                # Register, log-in, and redirect user
+                user.authenticated = True
+                db.session.add(user)
+                db.session.commit()
+                login_user(user)
+                return redirect(url_for('home'))
+            except IntegrityError:
+                flash("That username is taken", "danger")
+                return redirect(url_for("login"))
         else:
             flash("Passwords did not match", 'error')
             return redirect(url_for('login'))
@@ -211,16 +216,26 @@ def account_reddit_unlink():
 def upload_and_post():
     if(request.method == 'POST'):
         # TODO: Sanitize inputs
-        response = im_control.image_upload(db, 
+        print(request.form)
+        imgur_response = im_control.image_upload(db, 
                 request.form['img_url'], current_user.imgur_user)
-        if('success' in response):
-            if (response['success'] == True):
+        print(imgur_response)
+        if('success' in imgur_response):
+            if (imgur_response['success'] == True):
                 # Image Uploaded
-                flash(response['imgur_url'], 'success')
+                flash(imgur_response['imgur_url'], 'success')
                 # TODO: Reddit Posting and Commenting Portion
-                # TODO: Captcha Handling
-            elif (response['success'] == False):
-                flash(response['error'], 'danger')
+                args = {'url': imgur_response['imgur_url'],
+                        'title': request.form['title'],
+                        'subreddit': request.form['subreddit'],
+                        'comment': request.form['comment']}
+                print(args)
+                link = r_h.submit_post_and_comment(reddit, 
+                        current_user.reddit_user, 
+                        args)
+                flash(link, "success")
+            elif (imgur_response['success'] == False):
+                flash(imgur_response['error'], 'danger')
         else: # Internal error in imgur_backend handling
             return 'Unhandled server error'
         return redirect(url_for("home"))

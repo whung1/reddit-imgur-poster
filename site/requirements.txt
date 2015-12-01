@@ -1,0 +1,5 @@
+Flask == 0.10.1
+sqlalchemy_migrate == 0.10.0
+praw == 3.3.0
+Requests == 2.8.1
+SQLAlchemy == 1.0.9

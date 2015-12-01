@@ -46,19 +46,3 @@ def get_username(imgur_user):
 def set_username(imgur_user, new_username):
     imgur_user.username = new_username
 
-def get_header(imgur_user, client_id):
-    """ Function to get the header for API actions
-    Changes depending whether or not the user
-    has a valid token with the application
-
-    Returns an authroization header (dictionary)"""
-    if(imgur_user is None):
-        # User does not have necessary tokens for authorization
-        # Return the general header for this application
-        return {"Authorization": "Client-ID {0}".format(
-                    client_id)}
-    else:
-        # User has been authorized
-        # Return header specific to this user via their access token
-        return {"Authorization": "Bearer {0}".format(
-                    get_access_token(imgur_user))}
