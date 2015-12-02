@@ -127,3 +127,11 @@ class BasicTestCase(TestCase):
         properly if no user is logged in"""
         self.no_login_redirect_post_helper('upload_and_post')
 
+    # Test 13
+    def test_no_login_redirect_account_delete(self):
+        """Does the upload_and_post method redirect
+        properly if no user is logged in"""
+        self.no_login_redirect_post_helper('account_delete')
+
+if __name__ == '__main__':
+    unittest.main()

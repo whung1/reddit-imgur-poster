@@ -6,11 +6,13 @@ Final Week List (For CS242):
   * COMPLETED:
     * Create basic README.mds
     * Create neat requirements.txt through pipreqs
+    * Database (SQLAlchemy)
     * Login
-        * Flask-Login implementation
+        * Flask-Login re-implementation
             * Handle hack attempts
     * Registration
         * Handling UNIQUE Constraint for SQLITE
+    * Delete Account functionality
     * Imgur Portion
         * Refresh Token Backend
         * Handle exceptions
@@ -23,21 +25,26 @@ Final Week List (For CS242):
             * Handle exceptions
             * Handle errors if server is stopped
     * Account Pages
+        * Delete account button
         * Navbar inclusion when logged in ONLY
+        * Linking template/redirecting reorganization
+    * Unit Testing
+        * Website User (tests_user.py)
+            * Revamped some unit tests which were reliant on others
+            * Account Registration unit tests
+            * Account Delete unit tests
 
   * TO-DO:
     * Reddit Portion
         * Reddit Posting
             * Optional Comments
     * Flask-WTF-Forms change
-    * Unit tests for imgur-backend
-    * Unit tests for registration and delete
-    * Delete Account functionality (IN PROGRESS)
+    * Unit Testing
+        * Imgur-backend
+        * Reddit-backend
     * Account Pages (IN PROGRESS)
-        * Delete account button
         * Display basic info on accounts and redirect to linking pages
         * Live information grab for imgur and reddit link pages
-            * Template reorganization
 
 12/20 Onwards List:
   * COMPLETED:

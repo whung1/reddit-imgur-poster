@@ -51,7 +51,7 @@ def login():
 @app.route('/register/process', methods=['POST'])
 def register_process():
     if request.method == 'POST':
-        print(request.form)
+        # print(request.form)
         # TODO: More Sanitizing of User Registration Input
         # TODO: Error handling if unique != true for username
         if(request.form['confirm-password'] == request.form['password']):
@@ -101,17 +101,45 @@ def recover_account():
 @app.route('/account')
 @login_required
 def account():
-    # TODO: Delete user
-    # TODO: Account page
-    return "%s's profile" % current_user.username
+    return render_template("account.html",
+            page="account",
+            in_title = "Account")
+            
+
+@app.route('/account/delete', methods=['GET','POST'])
+@login_required
+def account_delete():
+    if (request.method == 'GET'):
+        return render_template("account_delete.html",
+                page="account_delete",
+                in_title="Account | Delete")
+    if (request.method == 'POST'):
+        # If password confirmation is correct, delete account
+        if ('password' in request.form):
+            if (bcrypt.check_password_hash(current_user.pwd,
+                request.form['password'])):
+                # Get from database and delete
+                user = User.query.get(current_user.id)
+                db.session.delete(user)
+                db.session.commit()
+                flash("Your account was deleted", "success")
+                return redirect(url_for("login"))
+            else:
+                flash("Password was incorrect", "danger")
+        return redirect(url_for("account_delete")) # If fail, redirect to account
 
 @app.route('/account/imgur')
 @login_required
 def account_imgur():
-    return render_template("account_imgur.html",
-            page="account_imgur",
-            in_title="Account | Imgur",
-            request_url=im_control.get_request_pin_url())
+    if (current_user.imgur_user):
+        return render_template("account_imgur_linked.html",
+                page="account_imgur_link",
+                in_title="Account | Imgur | Linking")
+    else:
+        return render_template("account_imgur_unlinked.html",
+                page="account_imgur_unlink",
+                in_title="Account | Imgur | Linking",
+                request_url=im_control.get_request_pin_url())
     
 @app.route('/account/imgur/link', methods=['POST'])
 @login_required
@@ -163,10 +191,15 @@ def account_imgur_unlink():
 @app.route('/account/reddit')
 @login_required
 def account_reddit():
-    return render_template('account_reddit.html',
-            page='account_reddit',
-            in_title="Account | Reddit",
-            request_url = r_h.get_authorize_url(reddit))
+    if (current_user.reddit_user):
+        return render_template("account_reddit_linked.html",
+                page="account_reddit_linked",
+                in_title="Account | Reddit | Linking")
+    else:
+        return render_template('account_reddit_unlinked.html',
+                page='account_reddit_unlinked',
+                in_title="Account | Reddit | Linking",
+                request_url = r_h.get_authorize_url(reddit))
 
 @app.route('/account/reddit/link', methods=['GET'])
 @login_required

@@ -36,7 +36,7 @@ def parse_upload_image_json(j):
         # TODO: check if needed to return any specific descriptors
 
         return {'success': True,
-                'imgur_url': j['data']['link'][:-4]}
+                'imgur_url': j['data']['link']}
     else:
         return {'success': False,
                 'error': throw_error(j)}

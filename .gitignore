@@ -1,5 +1,5 @@
-#API Keys
-*.ini
+#Ignore API Keys
+auth.ini
 
 # Ignore .swp files
 *.swp

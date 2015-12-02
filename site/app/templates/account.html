@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+<div class="text-center">
+    <h1>Account Page</h1>
+    <p class="lead">Logged in as: {{ current_user.username }}
+	<br/>Email Address: {{ current_user.email }}
+	</p>
+    <div class="row">
+	<div class="col-mod-6">
+        <a href="/account/reddit">
+            <button class="btn btn-primary">My Reddit Account</button> 
+        </a>
+        <a href="/account/imgur">
+            <button class="btn btn-success">My Imgur Account</button> 
+        </a>
+        <a href="/account/delete">
+            <button class="btn btn-danger">Delete My Account</button> 
+        </a>
+    </div><!-- col-mod-6 -->
+    </div><!-- row -->
+</div><!-- text-center -->
+</div><!-- container -->
+{% endblock %}
