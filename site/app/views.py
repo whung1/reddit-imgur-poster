@@ -175,13 +175,16 @@ def account_reddit():
 @app.route('/account/reddit/link', methods=['GET'])
 @login_required
 def account_reddit_link():
+    # If an account is linked, unlink before trying to link
+    if(current_user.reddit_user is not None):
+        account_reddit_unlink()
+    # Link the reddit account with the site account
     print(request.args)
     if ('state' in request.args and 'code' in request.args):
         cur_state = request.args.get('state')
         # TODO: Check states
         cur_code = request.args.get('code')
         # TODO: Fail get_access_information gracefully
-        # TODO: Unlink before relink
         info = reddit.get_access_information(cur_code)
         if('access_token' in info and 'refresh_token' in info):
             usr = reddit.get_me()
@@ -214,29 +217,29 @@ def account_reddit_unlink():
 @app.route('/upload_and_post/process', methods=['POST'])
 @login_required
 def upload_and_post():
-    if(request.method == 'POST'):
+    if (request.method == 'POST' and
+            r_h.establish_oauth(reddit, current_user.reddit_user)):
         # TODO: Sanitize inputs
         print(request.form)
         imgur_response = im_control.image_upload(db, 
                 request.form['img_url'], current_user.imgur_user)
         print(imgur_response)
-        if('success' in imgur_response):
-            if (imgur_response['success'] == True):
-                # Image Uploaded
-                flash(imgur_response['imgur_url'], 'success')
-                # TODO: Reddit Posting and Commenting Portion
-                args = {'url': imgur_response['imgur_url'],
-                        'title': request.form['title'],
-                        'subreddit': request.form['subreddit'],
-                        'comment': request.form['comment']}
-                print(args)
-                link = r_h.submit_post_and_comment(reddit, 
-                        current_user.reddit_user, 
-                        args)
-                flash(link, "success")
-            elif (imgur_response['success'] == False):
-                flash(imgur_response['error'], 'danger')
-        else: # Internal error in imgur_backend handling
+        if ('success' in imgur_response and 
+                imgur_response['success'] == True):
+            # Image Uploaded
+            args = {'url': imgur_response['imgur_url'],
+                    'title': request.form['title'],
+                    'subreddit': request.form['subreddit'],
+                    'comment': request.form['comment']}
+            link = r_h.submit_post_and_comment(reddit, 
+                    current_user.reddit_user,
+                    args)
+            flash(link, "success")
+        elif ('success' not in imgur_response): 
+            """Internal coding error or structural
+            change in imgur_backend handling"""
             return 'Unhandled server error'
-        return redirect(url_for("home"))
+        elif (imgur_response['success'] == False):
+            flash(imgur_response['error'], 'danger')
+    return redirect(url_for("home")) # Always redirect back to home
 

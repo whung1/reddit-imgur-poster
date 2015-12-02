@@ -1,6 +1,10 @@
-import praw
 import os
 import ConfigParser
+
+from flask import flash
+import praw
+import praw.errors
+
 
 def get_credentials(elem):
     '''
@@ -45,9 +49,17 @@ def establish_oauth(r, reddit_usr,
     if (reddit_usr is None):
         return False
     else:
-        r.set_access_credentials(scope,
-                                reddit_usr.access_token,
-                                reddit_usr.refresh_token)
+        try:
+            # TODO: Check if access tokens
+            # and refresh tokens are changed
+            info = r.refresh_access_information(
+                    refresh_token=reddit_usr.refresh_token)
+            print("Refreshed access info")
+        except praw.errors.HTTPException as e:
+            exc = e._raw
+            flash(exc.status_code, "danger")
+        except praw.errors.OAuthInvalidToken:
+            flash("Invalid OAuth Token", "danger")
         return r.is_oauth_session()
 
 def submit_post_and_comment(r, reddit_usr, args):
@@ -61,17 +73,26 @@ def submit_post_and_comment(r, reddit_usr, args):
     title = args['title']
     url = args['url']
     comment = args['comment']
-    # TODO: Check if comment is optional
     # TODO: Captcha Handling
-    if(establish_oauth(r, reddit_usr)):
-        print(r.is_oauth_session())
+    if(r.is_oauth_session()):
         # submit(subreddit, title, text=None, url=None, captcha=None, save=None, send_replies=None, resubmit=None)
-        submission = r.submit(subreddit = subreddit, 
-                title = title, 
-                text = None,
-                url = url)
-        submission.add_comment(comment)
-        return submission.short_link
+        try:
+            submission = r.submit(subreddit = subreddit, 
+                    title = title, 
+                    text = None,
+                    url = url,
+                    raise_captcha_exception=True)
+            # TODO: Check if comment is optional/does not exist
+            try:
+                submission.add_comment(comment)
+                return submission.short_link
+            except praw.errors.InvalidCaptcha as c:
+                flash("Invalid Captcha", "danger")
+            except Exception as e:
+                flash(e, "danger")
+        except Exception as e:
+            flash(e, "danger")
+        return "fail"
     else:
         return "flase"
 
