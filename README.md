@@ -3,7 +3,7 @@ Ongoing work for mini-website to help posting images on reddit by
 automatically uploading file URLs to imgur, then with the provided information, making a post with that newly uploaded rehosted image url
 
 Final Week List (For CS242):
-  COMPLETED:
+  * COMPLETED:
     * Create basic README.mds
     * Create neat requirements.txt through pipreqs
     * Login
@@ -25,7 +25,7 @@ Final Week List (For CS242):
     * Account Pages
         * Navbar inclusion when logged in ONLY
 
-  TO-DO:
+  * TO-DO:
     * Reddit Portion
         * Reddit Posting
             * Optional Comments
@@ -40,8 +40,8 @@ Final Week List (For CS242):
             * Template reorganization
 
 12/20 Onwards List:
-  COMPLETED:
-  TO-DO:
+  * COMPLETED:
+  * TO-DO:
     * Seperate test cases into a folder via python import hacks
     * Navbar highlighting active tab (robust method)
     * Decide if we want to stick with PRAW
@@ -58,5 +58,5 @@ Final Week List (For CS242):
         * Reddit CAPTCHA handling
 
 Possible Features List:
-  TO-DO:
+  * TO-DO:
     * Image hosting implementation of other sites
