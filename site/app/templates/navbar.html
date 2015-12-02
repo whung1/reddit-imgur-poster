@@ -14,10 +14,10 @@
             <!--li class="active"><a href="/login">Login</a></li-->
             {% if current_user.is_authenticated %}
             <li><a href="/logout">Logout, {{ current_user.username }}</a></li>
+            <li><a href="/account">Account</a></li>
             {% else %}
             <li><a href="/login">Login</a></li>
             {% endif %}
-            <li><a href="/about">About</a></li>
             <li><a href="/contact">Contact</a></li>
         </ul>
     </div><!--/.nav-collapse -->

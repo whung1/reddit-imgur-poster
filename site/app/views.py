@@ -89,10 +89,6 @@ def home():
             page='home',
             in_title = "Home")
 
-@app.route('/about')
-def about():
-    return 'About Page'
-
 @app.route('/contact')
 def contact():
     return 'Contact Page'
@@ -179,17 +175,18 @@ def account_reddit_link():
     if(current_user.reddit_user is not None):
         account_reddit_unlink()
     # Link the reddit account with the site account
-    print(request.args)
+    # print(request.args)
     if ('state' in request.args and 'code' in request.args):
         cur_state = request.args.get('state')
-        # TODO: Check states
         cur_code = request.args.get('code')
-        # TODO: Fail get_access_information gracefully
-        info = reddit.get_access_information(cur_code)
+        try:
+            info = reddit.get_access_information(cur_code)
+        except Exception as e:
+            flash("An error occured while linking", "danger")
+            return redirect(url_for("account_reddit"))
         if('access_token' in info and 'refresh_token' in info):
             usr = reddit.get_me()
             reddit_usr = Reddit_User(username=usr.name,
-                        access_token=info['access_token'],
                         refresh_token=info['refresh_token'],
                         user_id=current_user.id)
             db.session.add(reddit_usr)

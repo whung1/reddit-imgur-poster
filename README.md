@@ -4,6 +4,8 @@ automatically uploading file URLs to imgur, then with the provided information, 
 
 Final Week List (For CS242):
   COMPLETED:
+    * Create basic README.mds
+    * Create neat requirements.txt through pipreqs
     * Login
         * Flask-Login implementation
             * Handle hack attempts
@@ -17,22 +19,21 @@ Final Week List (For CS242):
             * Handle exceptions/unusual hack attempts
         * Reddit Posting
             * Basic Posting
-            * Only allow submission with linked reddit account (backend)
+            * Only allow submission with linked reddit account
             * Handle exceptions
             * Handle errors if server is stopped
-    * Create neat requirements.txt through pipreqs
-    * Create basic README.mds
+    * Account Pages
+        * Navbar inclusion when logged in ONLY
+
   TO-DO:
     * Reddit Portion
         * Reddit Posting
-            * Only allow submission with linked reddit account (frontend)
-            * Optional Comments (IN PROGRESS)
+            * Optional Comments
     * Flask-WTF-Forms change
     * Unit tests for imgur-backend
     * Unit tests for registration and delete
-    * Delete Account functionality
-    * Accounts Pages (IN PROGRESS)
-        * Navbar inclusion when logged in ONLY
+    * Delete Account functionality (IN PROGRESS)
+    * Account Pages (IN PROGRESS)
         * Delete account button
         * Display basic info on accounts and redirect to linking pages
         * Live information grab for imgur and reddit link pages
@@ -56,6 +57,6 @@ Final Week List (For CS242):
         * Imgur CAPTCHA handling
         * Reddit CAPTCHA handling
 
-Reach List:
+Possible Features List:
   TO-DO:
     * Image hosting implementation of other sites

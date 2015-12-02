@@ -2,8 +2,8 @@
 {% block content %}
 <div class="container">
 	<div class="text-center">
-    	<h1>Home Page Placeholder</h1>
-    	<p class="lead"><br></p>
+    	<h1>Image Post Submission</h1>
+        {% if current_user.reddit_user %}
 <!-- Input Form from http://bootsnipp.com/snippets/featured/simple-contact-form -->
 <div class="col-md-6 col-md-offset-3">
     <div class="form-area">  
@@ -26,6 +26,10 @@
         </form>
     </div>
 </div>
-</div>
+    {% else %}
+        <p class="lead">Go to the Accounts tab above to link a reddit account<br/>
+        <span class="small text-danger">In order to submit a post, you need to have a reddit account linked</span></p>
+    {% endif %}
+    </div><!-- text-center -->
 </div><!-- container -->
 {% endblock %}
