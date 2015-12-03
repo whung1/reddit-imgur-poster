@@ -14,11 +14,13 @@ Final Week List (For CS242):
         * Handling UNIQUE Constraint for SQLITE
     * Delete Account functionality
     * Imgur Portion
+        * Refactored user model/handlers
         * Refresh Token Backend
         * Handle exceptions
     * Reddit Portion
         * Reddit Account, Linking and Unlinking
             * Handle exceptions/unusual hack attempts
+            * Get rid of storing access tokens for reddit user
         * Reddit Posting
             * Optional Comments
             * Basic Posting
@@ -35,14 +37,10 @@ Final Week List (For CS242):
             * Revamped some unit tests which were reliant on others
             * User Registration unit tests
             * User Delete unit tests
+        * Reddit_User model (tests_reddit_user.py)
+        * Imgur_User model (tests_imgur_user.py)
 
   * TO-DO:
-    * Flask-WTF-Forms change
-    * Unit Testing
-        * Reddit_User model (IN PROGRESS)
-        * Imgur_User model
-        * Imgur-backend
-        * Reddit-backend
 
 12/20 Onwards List:
   * COMPLETED:
@@ -51,20 +49,26 @@ Final Week List (For CS242):
     * Navbar highlighting active tab (robust method)
     * Decide if we want to stick with PRAW
         * PRAW fix for multi-users (sessions? praw-multithread? hack?)
-        * Get rid of storing access tokens for reddit user
-    * Better UI for submission
+    * Horizontal parallax UI for submission
     * Utilize "state" portion of OAuth2 authentication
+    * Image Uploading
+        * Display a small thumbnail of the image uploaded
+        * Integrate in multistep process via horizontal parallax
     * Reddit Posting
-        * Multistep process
+        * Multistep process via horizontal parallax
         * Subreddit Autocomplete GET (Reddit backend+Javascript?)
     * AJAX submission
-        * No more page refresh
+        * No more page refreshing(?), as all the content is in body
         * Imgur CAPTCHA handling
         * Reddit CAPTCHA handling
     * Account Pages
-        * Display basic info on accounts and redirect to linking pages
+        * Display basic info on accounts (karma, etc)
         * Live information grab for imgur and reddit link pages
+    * Change to using Flask-WTF-Forms
+    * Unit Testing
+        * Imgur-backend
+        * Reddit-backend
 
 Possible Features List:
   * TO-DO:
-    * Image hosting implementation of other sites
+    * Image hosting implementation on other sites
