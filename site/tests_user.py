@@ -9,7 +9,7 @@ from flask.ext.testing import TestCase
 from flask.ext.login import current_user
 
 from app import app, db, bcrypt, login_manager
-from app.models import User, Reddit_User
+from app.models import User
 
 class UserTestCase(TestCase):
 
@@ -39,7 +39,7 @@ class UserTestCase(TestCase):
             db.session.remove()
             db.drop_all()
 
-    def user_create_helper(self, username="foo", email="foo@foo.com", pwd="password"):
+    def create_user(self, username="foo", email="foo@foo.com", pwd="password"):
         """Testing helper function to create
         a user in database manually"""
         with app.app_context():
@@ -49,7 +49,7 @@ class UserTestCase(TestCase):
             db.session.add(user)
             db.session.commit()
 
-    def login_helper(self, username="foo", pwd="password"):
+    def login_user(self, username="foo", pwd="password"):
         """Helper function to log a user in using the
         site's login function"""
         return self.client.post(url_for('login'),
@@ -61,18 +61,19 @@ class UserTestCase(TestCase):
         """Is the representation of the 
         User model what we expect?"""
         with app.app_context():
-            self.user_create_helper()
+            self.create_user()
             user = User.query.first()
             representation = '<User %r>' % unicode('foo')
             self.assertTrue(str(user) == representation)
             return True
 
     # Test 2
-    def test_get_user(self):
-        """Can we retrieve the User instance created in setUp?"""
+    def test_user_model(self):
+        """Is the User model working as expected"""
         with app.app_context():
-            self.user_create_helper()
+            self.create_user()
             user = User.query.first()
+            # Test encrypted password
             self.assertTrue(bcrypt.check_password_hash(user.pwd,
                                                 'password'))
             return True
@@ -83,8 +84,8 @@ class UserTestCase(TestCase):
         User model work as expected?"""
         with app.app_context():
             with self.client:
-                self.user_create_helper()
-                response = self.login_helper()
+                self.create_user()
+                response = self.login_user()
                 self.assert_redirects(response, url_for('home'))
                 self.assertTrue(current_user)
                 self.assertTrue(current_user.is_active)
@@ -98,7 +99,7 @@ class UserTestCase(TestCase):
         to login a user that doesn't exist?"""
         with app.app_context():
             with self.client:
-                response = self.login_helper('fakeuser','fakepwd')
+                response = self.login_user('fakeuser','fakepwd')
                 self.assertFalse(current_user.is_active)
                 self.assert_redirects(response, url_for('login'))
                 return True
@@ -143,7 +144,7 @@ class UserTestCase(TestCase):
         to login a user that doesn't exist?"""
         with app.app_context():
             with self.client:
-                response = self.login_helper('fakeuser','fakepwd')
+                response = self.login_user('fakeuser','fakepwd')
                 self.assertFalse(current_user.is_active)
                 self.assert_redirects(response, url_for('login'))
                 return True
@@ -154,8 +155,8 @@ class UserTestCase(TestCase):
          for exisiting User model?"""
          with app.app_context():
              with self.client:
-                 self.user_create_helper()
-                 response = self.login_helper()
+                 self.create_user()
+                 response = self.login_user()
                  self.assertTrue(current_user.is_active)
                  response = self.client.get(url_for('logout'))
                  self.assert_redirects(response, url_for('login'))
@@ -168,8 +169,8 @@ class UserTestCase(TestCase):
         the site through the delete function?"""
         with app.app_context():
             with self.client:
-                self.user_create_helper()
-                self.login_helper()
+                self.create_user()
+                self.login_user()
                 # user delete
                 response = self.client.post(url_for("account_delete"),
                         data = {'password': "password"})
@@ -179,60 +180,35 @@ class UserTestCase(TestCase):
                 return True
     
     # Test 10
-    def test_user_delete_children(self):
-        """After using delete, does the children 
-        of a User get properly deleted from the site?"""
-        with app.app_context():
-            with self.client:
-                self.user_create_helper()
-                self.login_helper()
-                # link a reddit child model to test
-                reddit_usr = Reddit_User(username="reddit_child",
-                        refresh_token="notactuallyatoken",
-                        user_id=current_user.id)
-                db.session.add(reddit_usr)
-                db.session.commit()
-                # Make sure the reddit child exists
-                reddit_usr = Reddit_User.query.first()
-                self.assertFalse(reddit_usr is None)
-                self.assertTrue(reddit_usr.user_id == current_user.id)
-                # user delete
-                response = self.client.post(url_for("account_delete"),
-                        data = {'password': "password"})
-                user = User.query.first()
-                self.assertTrue(user is None)
-                reddit_usr = Reddit_User.query.first()
-                self.assertTrue(reddit_usr is None)
-                return True
-    
-    # Test 11
     def test_user_delete_wrong_password(self):
         """Will a user be deleted from the
         site without the correct password?"""
         with app.app_context():
             with self.client:
-                self.user_create_helper()
-                self.login_helper()
+                self.create_user()
+                self.login_user()
                 # user delete attempt
                 response = self.client.post(url_for("account_delete"),
                         data = {'password': "12938129dasdmkmsd"})
-                self.assert_redirects(response, url_for("account"))
+                self.assert_redirects(response, 
+                        url_for("account_delete"))
                 user = User.query.first()
                 self.assertFalse(user is None)
                 return True
 
-    # Test 12
+    # Test 11
     def test_user_delete_wrong_form(self):
         """Will a user be deleted from simple
         incorrect POSTing?"""
         with app.app_context():
             with self.client:
-                self.user_create_helper()
-                self.login_helper()
+                self.create_user()
+                self.login_user()
                 # user delete
                 response = self.client.post(url_for("account_delete"),
                         data = {'notvidd': "whatever"})
-                self.assert_redirects(response, url_for("account"))
+                self.assert_redirects(response, 
+                        url_for("account_delete"))
                 user = User.query.first()
                 self.assertFalse(user is None)
                 return True

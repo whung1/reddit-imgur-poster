@@ -59,4 +59,4 @@ class Reddit_User(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
     def __repr__(self):
-        return '<Imgur_User %r>' % (self.username)
+        return '<Reddit_User %r>' % (self.username)

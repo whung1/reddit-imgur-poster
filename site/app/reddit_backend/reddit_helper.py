@@ -82,14 +82,15 @@ def submit_post_and_comment(r, reddit_usr, args):
                     text = None,
                     url = url,
                     raise_captcha_exception=True)
-            # TODO: Check if comment is optional/does not exist
             try:
-                submission.add_comment(comment)
+                if (comment != ""):
+                    submission.add_comment(comment)
+                    #TODO: Add exceptions
                 return submission.short_link
-            except praw.errors.InvalidCaptcha as c:
-                flash("Invalid Captcha", "danger")
             except Exception as e:
                 flash(e, "danger")
+        except praw.errors.InvalidCaptcha as c:
+            flash("Invalid Captcha", "danger")
         except Exception as e:
             flash(e, "danger")
         return "fail"

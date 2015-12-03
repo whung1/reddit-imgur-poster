@@ -192,9 +192,12 @@ def account_imgur_unlink():
 @login_required
 def account_reddit():
     if (current_user.reddit_user):
-        return render_template("account_reddit_linked.html",
-                page="account_reddit_linked",
-                in_title="Account | Reddit | Linking")
+        if(r_h.establish_oauth(reddit, current_user.reddit_user)):
+            return render_template("account_reddit_linked.html",
+                    page="account_reddit_linked",
+                    in_title="Account | Reddit | Linking")
+        else:
+            return "Unhandled error"
     else:
         return render_template('account_reddit_unlinked.html',
                 page='account_reddit_unlinked',
@@ -257,10 +260,15 @@ def upload_and_post():
         if ('success' in imgur_response and 
                 imgur_response['success'] == True):
             # Image Uploaded
+            # Optional comments
+            cur_comment = ""
+            if ('comment' in request.form):
+                cur_comment = request.form['comment']
+
             args = {'url': imgur_response['imgur_url'],
                     'title': request.form['title'],
                     'subreddit': request.form['subreddit'],
-                    'comment': request.form['comment']}
+                    'comment': cur_comment}
             link = r_h.submit_post_and_comment(reddit, 
                     current_user.reddit_user,
                     args)
