@@ -14,11 +14,26 @@
             <!--li class="active"><a href="/login">Login</a></li-->
             {% if current_user.is_authenticated %}
             <li><a href="/logout">Logout, {{ current_user.username }}</a></li>
-            <li><a href="/account">Account</a></li>
+                {% if page == "account" %}
+                    <li class="active">
+                {% else %}
+                    <li>
+                {% endif %}
+            <a href="/account">Account</a></li>
             {% else %}
-            <li><a href="/login">Login</a></li>
+                {% if page == "login" %}
+                    <li class="active">
+                {% else %}
+                    <li>
+                {% endif %}
+            <a href="/login">Login</a></li>
             {% endif %}
-            <li><a href="/contact">Contact</a></li>
+                {% if page == "contact" %}
+                    <li class="active">
+                {% else %}
+                    <li>
+                {% endif %}
+            <a href="/contact">Contact</a></li>
         </ul>
     </div><!--/.nav-collapse -->
   </div>

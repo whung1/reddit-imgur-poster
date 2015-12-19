@@ -45,8 +45,9 @@ Final Week List (For CS242):
 12/20 Onwards List:
   * COMPLETED:
   * TO-DO:
+    * Bootstrap, jquery, js files for offline work
     * Seperate test cases into a folder via python import hacks
-    * Navbar highlighting active tab (robust method)
+    * Navbar highlighting active tab (IN PROGRESS)
     * Decide if we want to stick with PRAW
         * PRAW fix for multi-users (sessions? praw-multithread? hack?)
     * Horizontal parallax UI for submission
@@ -68,7 +69,10 @@ Final Week List (For CS242):
     * Unit Testing
         * Imgur-backend
         * Reddit-backend
+    * HTTPS Security (Heroku hosting...actual server? Should we change off Flask?)
+    * Heroku Hosting
 
 Possible Features List:
   * TO-DO:
     * Image hosting implementation on other sites
+    * Robust implementation of active navbar (jquery?)
